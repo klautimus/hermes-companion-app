@@ -2,7 +2,7 @@
 
 **Type**: GitHub Issues
 
-Issues live at `https://github.com/klautimus/hermes-companion/issues`.
+Issues live at `https://github.com/klautimus/hermes-companion-app/issues`.
 
 External PRs are NOT a triage surface (solo project).
 

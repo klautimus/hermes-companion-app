@@ -1,13 +1,15 @@
 # Hermes Companion Daemon
 
-An HTTP proxy server that bridges the [Hermes Companion Android app](https://github.com/klautimus/hermes-companion) with the [Hermes Agent](https://github.com/nousresearch/hermes-agent) API. Provides authenticated access to chat sessions, kanban board management, file attachments, and email 2FA.
+An HTTP proxy server that bridges the [Hermes Companion Android app](https://github.com/klautimus/hermes-companion-app) with the [Hermes Agent](https://github.com/nousresearch/hermes-agent) API. Provides authenticated access to chat sessions, kanban board management, file attachments, and email 2FA.
+
+This daemon is part of the [hermes-companion-app](https://github.com/klautimus/hermes-companion-app) monorepo (in the `daemon/` subdirectory).
 
 ## Quick Start
 
 ### Option 1: One-line Install (systemd)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/klautimus/hermes-companion-daemon/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/klautimus/hermes-companion-app/main/install.sh | bash
 ```
 
 ### Option 2: pip
@@ -21,28 +23,20 @@ hermes-companion serve    # start the server
 ### Option 3: Docker
 
 ```bash
+# From the combined repo root:
+docker-compose up -d
+```
+
+Or standalone:
+
+```bash
 docker run -d \
   --name hermes-companion \
   --restart unless-stopped \
   -p 8777:8777 \
   -e HERMES_API_URL=http://host.docker.internal:8642 \
   -v companion-data:/data \
-  ghcr.io/klautimus/hermes-companion-daemon
-```
-
-Or with docker-compose:
-
-```yaml
-# docker-compose.yml
-services:
-  companion:
-    build: https://github.com/klautimus/hermes-companion-daemon.git#main
-    ports: ["8777:8777"]
-    environment:
-      - HERMES_API_URL=http://host.docker.internal:8642
-    volumes:
-      - companion-data:/data
-    restart: unless-stopped
+  hermes-companion:latest
 ```
 
 ## Prerequisites
@@ -156,9 +150,9 @@ systemctl --user enable hermes-companion
 ## Development
 
 ```bash
-# Clone
-git clone https://github.com/klautimus/hermes-companion-daemon.git
-cd hermes-companion-daemon
+# Clone the combined repo
+git clone https://github.com/klautimus/hermes-companion-app.git
+cd hermes-companion-app/daemon
 
 # Install in development mode
 pip install -e ".[dev]"
@@ -176,7 +170,7 @@ python server.py
 Android App (Kotlin)
        │
        ▼
-Companion Daemon (this repo)      ──── HTTP proxy ────►  Hermes API (port 8642)
+Companion Daemon (this directory)      ──── HTTP proxy ────►  Hermes API (port 8642)
   • Basic Auth + 2FA                                        • Chat sessions
   • Kanban CLI wrapper                                      • Message history
   • Attachment storage                                      • Token generation

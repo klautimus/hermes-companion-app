@@ -87,7 +87,7 @@ hermes-companion/
 ### Option 1: One-line install (recommended)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/klautimus/hermes-companion/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/klautimus/hermes-companion-app/main/install.sh | bash
 ```
 
 This script will:

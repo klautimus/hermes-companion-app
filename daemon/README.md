@@ -51,13 +51,15 @@ The daemon reads configuration from `~/.hermes/companion/config.yaml`:
 
 ```yaml
 server:
-  host: 127.0.0.1    # set to 0.0.0.0 for Docker/remote access
+  host: 127.0.0.1    # 0.0.0.0 for Docker/remote access
   port: 8777
 
 hermes:
   api_url: http://127.0.0.1:8642
-  api_key: ""          # your Hermes API server key
-  cli_path: auto       # auto-detect hermes binary, or set explicit path
+  cli_path: auto      # auto-detect hermes binary
+
+email:
+  sender: ""          # Override sender email for OTP. If empty, uses the Gmail account's own address.
 ```
 
 Environment variable overrides:

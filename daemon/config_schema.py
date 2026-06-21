@@ -58,11 +58,16 @@ class StorageConfig:
 
 
 @dataclass
+class EmailConfig:
+    sender: str = ""  # Override sender email for OTP. If empty, uses the Gmail account's own address.
+
+@dataclass
 class CompanionConfig:
     server: ServerConfig = field(default_factory=ServerConfig)
     hermes: HermesConfig = field(default_factory=HermesConfig)
     auth: AuthConfig = field(default_factory=AuthConfig)
     storage: StorageConfig = field(default_factory=StorageConfig)
+    email: EmailConfig = field(default_factory=EmailConfig)
 
     def to_dict(self) -> dict:
         return {

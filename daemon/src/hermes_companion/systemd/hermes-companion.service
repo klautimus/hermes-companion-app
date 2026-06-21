@@ -1,0 +1,13 @@
+[Unit]
+Description=Hermes Companion Server
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/kevin/.hermes/hermes-agent/venv/bin/python3 /home/kevin/.hermes/companion/companion_cli.py serve
+WorkingDirectory=/home/kevin/.hermes/companion
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

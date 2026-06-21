@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+*.egg-info/
+
+# Secrets — NEVER COMMIT
+auth.json
+auth.json.*
+setup_token.json
+*.env
+
+# Android
+.gradle/
+build/
+local.properties
+*.iml
+.idea/
+captures/
+.cxx/
+keystore.properties
+
+# Data
+attachments/
+data/
+
+# IDE
+.vscode/
+*.code-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# CodeGraph / pytest cache
+.codegraph/
+.pytest_cache/

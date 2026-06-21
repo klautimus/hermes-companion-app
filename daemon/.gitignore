@@ -1,0 +1,25 @@
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environment
+venv/
+
+# Pytest runtime data
+.pytest_cache/
+
+# Secrets - DO NOT COMMIT
+auth.json
+auth.json.bak
+auth.json.bak2
+
+# Runtime data
+attachments/
+
+# Logs
+*.log
+.venv-audit/
+*.egg-info/
+setup_token.json
+.codegraph/

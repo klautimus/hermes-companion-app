@@ -115,10 +115,50 @@ hermes-companion serve
 
 ### Connect your phone
 
-1. Download the APK from [Releases](https://github.com/klautimus/hermes-companion/releases/latest)
-2. Open the app and enter your server URL: `http://<your-machine-ip>:8777`
-3. Enter your credentials (set during setup)
-4. Start chatting! 🎉
+1. **Find your daemon's IP address.** The daemon runs on port 8777. Your phone needs to reach it over the network.
+
+   **On the same WiFi network (LAN):**
+   ```bash
+   # Find your machine's local IP
+   hostname -I
+   # or
+   ip addr show | grep 'inet ' | awk '{print $2}'
+   ```
+   Use that IP in the app: `http://192.168.1.100:8777` (replace with your actual IP).
+
+   **For remote access (outside your home network):**
+   Use a tunnel so your phone can reach the daemon from anywhere:
+   - **Cloudflare Tunnel** (free, recommended):
+     ```bash
+     # Install cloudflared
+     curl -fsSL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb -o cloudflared.deb
+     sudo dpkg -i cloudflared.deb
+     # Authenticate (one-time)
+     cloudflared tunnel login
+     # Create and run tunnel
+     cloudflared tunnel create hermes-companion
+     cloudflared tunnel route dns hermes-companion android.yourdomain.com
+     cloudflared tunnel run hermes-companion
+     ```
+     Then in the app: `https://android.yourdomain.com`
+   - **ngrok** (simpler, free tier available):
+     ```bash
+     ngrok http 8777
+     ```
+     Then use the ngrok URL in the app: `https://xxxx.ngrok-free.app`
+   - **WireGuard / Tailscale** (VPN — your phone joins your home network):
+     Install Tailscale on both machines, then use the Tailscale IP: `http://100.x.x.x:8777`
+
+2. **Open the app** and enter your server URL on the first screen:
+   - LAN: `http://192.168.1.100:8777` (your machine's local IP + port 8777)
+   - Cloudflare: `https://android.yourdomain.com`
+   - ngrok: `https://xxxx.ngrok-free.app`
+
+3. **Enter your credentials** (set during daemon setup — the `hermes-companion setup` wizard or the setup token flow)
+
+4. **Start chatting! 🎉**
+
+**Note on the Hermes gateway port:** The daemon connects to Hermes Agent's API server on port 8642 by default. This is configured in `~/.hermes/companion/config.yaml` under `hermes.api_url`. If you changed the Hermes API server port, update this accordingly. The Android app does NOT connect to port 8642 — it connects to the daemon on port 8777, which proxies to Hermes internally.
 
 ---
 

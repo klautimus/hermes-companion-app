@@ -6,9 +6,9 @@
 
 Chat with your AI agent, manage kanban boards, and monitor tasks — all from your Android phone.
 
-[![Release](https://img.shields.io/badge/release-v1.0.0-blue)](https://github.com/klautimus/hermes-companion/releases/latest)
+[![Release](https://img.shields.io/badge/release-v1.0.0-blue)](https://github.com/klautimus/hermes-companion-app/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Platform: Android 9+](https://img.shields.io/badge/platform-Android%209%2B-orange)](https://github.com/klautimus/hermes-companion/releases/latest)
+[![Platform: Android 8+](https://img.shields.io/badge/platform-Android%208%2B-orange)](https://github.com/klautimus/hermes-companion-app/releases/latest)
 [![Backend: Python](https://img.shields.io/badge/backend-Python%203.10%2B-yellow)](daemon/)
 
 </div>
@@ -44,12 +44,12 @@ Chat with your AI agent, manage kanban boards, and monitor tasks — all from yo
 ### One-line install (daemon)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/klautimus/hermes-companion/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/klautimus/hermes-companion-app/main/install.sh | bash
 ```
 
 ### Get the Android app
 
-Download the latest APK from the **[Releases page](https://github.com/klautimus/hermes-companion/releases/latest)**.
+Download the latest APK from the **[Releases page](https://github.com/klautimus/hermes-companion-app/releases/latest)**.
 
 ---
 
@@ -99,16 +99,16 @@ This script will:
 ### Option 2: Docker
 
 ```bash
-git clone https://github.com/klautimus/hermes-companion.git
-cd hermes-companion
+git clone https://github.com/klautimus/hermes-companion-app.git
+cd hermes-companion-app
 docker-compose up -d
 ```
 
 ### Option 3: Manual
 
 ```bash
-git clone https://github.com/klautimus/hermes-companion.git
-cd hermes-companion/daemon
+git clone https://github.com/klautimus/hermes-companion-app.git
+cd hermes-companion-app/daemon
 pip install -e .
 hermes-companion serve
 ```
@@ -130,7 +130,7 @@ The APK is not on Google Play — you'll need to install it manually. Here's how
 **Step 3: Download and install the APK**
 
 *Option A — Direct download on phone:*
-1. Open the [Releases page](https://github.com/klautimus/hermes-companion/releases/latest) in your phone's browser
+1. Open the [Releases page](https://github.com/klautimus/hermes-companion-app/releases/latest) in your phone's browser
 2. Download the `.apk` file
 3. Open the downloaded file → tap **Install**
 
@@ -312,7 +312,7 @@ The daemon exposes a REST API on port 8777. Key endpoints:
 
 ## 🤝 Contributing
 
-This is a personal project but suggestions and bug reports are welcome! Please [open an issue](https://github.com/klautimus/hermes-companion/issues).
+This is a personal project but suggestions and bug reports are welcome! Please [open an issue](https://github.com/klautimus/hermes-companion-app/issues).
 
 ---
 
@@ -324,9 +324,9 @@ This is a personal project but suggestions and bug reports are welcome! Please [
 
 <div align="center">
 
-**[⬇ Download APK](https://github.com/klautimus/hermes-companion/releases/latest)** ·
+**[⬇ Download APK](https://github.com/klautimus/hermes-companion-app/releases/latest)** ·
 **[📖 Full Docs](daemon/README.md)** ·
-**[🐛 Report Bug](https://github.com/klautimus/hermes-companion/issues)**
+**[🐛 Report Bug](https://github.com/klautimus/hermes-companion-app/issues)**
 
 Built by [Kevin Disher](https://github.com/klautimus) · Powered by [Hermes Agent](https://github.com/nousresearch/hermes-agent)
 

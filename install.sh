@@ -3,7 +3,7 @@
 #  Hermes Companion — One-line installer
 #
 #  Usage:
-#    curl -fsSL https://raw.githubusercontent.com/klautimus/hermes-companion/main/install.sh | bash
+#    curl -fsSL https://raw.githubusercontent.com/klautimus/hermes-companion-app/main/install.sh | bash
 #
 #  Or clone and run:
 #    ./install.sh                # systemd (default)
@@ -13,7 +13,7 @@
 set -euo pipefail
 
 VERSION="1.0.0"
-REPO_URL="https://github.com/klautimus/hermes-companion"
+REPO_URL="https://github.com/klautimus/hermes-companion-app"
 APK_URL="$REPO_URL/releases/latest"
 
 # Defaults

@@ -113,9 +113,39 @@ pip install -e .
 hermes-companion serve
 ```
 
-### Connect your phone
+### Install the Android app
 
-1. **Find your daemon's IP address.** The daemon runs on port 8777. Your phone needs to reach it over the network.
+The APK is not on Google Play — you'll need to install it manually. Here's how:
+
+**Step 1: Enable Developer Options on your Android phone**
+1. Open **Settings** → **About phone**
+2. Tap **Build number** 7 times (you'll see "You are now a developer")
+3. Go back to **Settings** → **System** → **Developer options**
+4. Enable **USB debugging** (needed for ADB installs)
+
+**Step 2: Allow installation from unknown sources**
+- **Android 8+:** When you first try to install the APK, Android will prompt you to allow your browser/file manager to install unknown apps. Tap **Settings** → enable **Allow from this source**.
+- **Older Android:** Settings → Security → enable **Unknown sources**
+
+**Step 3: Download and install the APK**
+
+*Option A — Direct download on phone:*
+1. Open the [Releases page](https://github.com/klautimus/hermes-companion/releases/latest) in your phone's browser
+2. Download the `.apk` file
+3. Open the downloaded file → tap **Install**
+
+*Option B — ADB install from computer (if you have ADB set up):*
+```bash
+# Find your device
+adb devices
+
+# Install the APK
+adb install -r hermes-companion-v1.0.0.apk
+```
+
+**Step 4: Open the app and connect**
+
+1. **Find your daemon's IP address.** The daemon runs on port 8777.
 
    **On the same WiFi network (LAN):**
    ```bash
@@ -158,7 +188,7 @@ hermes-companion serve
 
 4. **Start chatting! 🎉**
 
-**Note on the Hermes gateway port:** The daemon connects to Hermes Agent's API server on port 8642 by default. This is configured in `~/.hermes/companion/config.yaml` under `hermes.api_url`. If you changed the Hermes API server port, update this accordingly. The Android app does NOT connect to port 8642 — it connects to the daemon on port 8777, which proxies to Hermes internally.
+**Note on ports:** The Android app connects to the daemon on port **8777**. The daemon internally proxies to Hermes Agent's API on port **8642** (configured in `~/.hermes/companion/config.yaml`). You only need to enter the 8777 URL in the app — the daemon handles the rest.
 
 ---
 

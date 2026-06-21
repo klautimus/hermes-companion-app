@@ -285,9 +285,20 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                     .map { mapOf("role" to it.role, "content" to it.content) }
 
                 try {
-                    val reply = c.chat(history, sessionId = sid, attachmentIds = listOf(attId))
+                    c.chatStream(
+                        messages = history,
+                        sessionId = sid,
+                        attachmentIds = listOf(attId),
+                        onChunk = { delta ->
+                            _chatMessages.value = _chatMessages.value.map { msg ->
+                                if (msg.messageId == msgId && msg.isStreaming) {
+                                    msg.copy(content = msg.content + delta)
+                                } else msg
+                            }
+                        },
+                    )
                     _isStreaming.value = false
-                    finalizeAssistant(msgId, reply)
+                    finalizeAssistant(msgId, _chatMessages.value.firstOrNull { it.messageId == msgId }?.content ?: "")
                 } catch (e: Exception) {
                     _chatError.value = e.message
                     _isStreaming.value = false
@@ -545,7 +556,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         _kanbanError.value = null
         viewModelScope.launch {
             try {
-                c.uploadAttachment(bytes, fileName, mimeType)
+                c.uploadTaskAttachment(taskId, bytes, fileName, mimeType)
                 loadTask(taskId)
             } catch (e: Exception) {
                 _kanbanError.value = e.message
@@ -685,6 +696,37 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 c.post("/api/kanban/tasks/bulk?board=${boardSlug.value}", body)
                 loadTasks()
                 loadStats()
+            } catch (e: Exception) { _kanbanError.value = e.message }
+        }
+    }
+
+    // ── Decompose & Specify ──
+
+    fun decomposeTask(taskId: String) {
+        val c = client() ?: return
+        _kanbanError.value = null
+        viewModelScope.launch {
+            try {
+                val body = buildJsonObject {
+                    put("author", JsonPrimitive("user"))
+                }.toString()
+                c.post("/api/kanban/tasks/$taskId/decompose?board=${boardSlug.value}", body)
+                loadTasks()
+            } catch (e: Exception) { _kanbanError.value = e.message }
+        }
+    }
+
+    fun specifyTask(taskId: String, spec: String) {
+        val c = client() ?: return
+        _kanbanError.value = null
+        viewModelScope.launch {
+            try {
+                val body = buildJsonObject {
+                    put("author", JsonPrimitive("user"))
+                    put("spec", JsonPrimitive(spec))
+                }.toString()
+                c.post("/api/kanban/tasks/$taskId/specify?board=${boardSlug.value}", body)
+                loadTask(taskId)
             } catch (e: Exception) { _kanbanError.value = e.message }
         }
     }

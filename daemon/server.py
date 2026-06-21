@@ -1631,13 +1631,6 @@ async def create_app() -> web.Application:
 
 def main():
     _load_setup_tokens_from_disk()
-    # Apply email sender override from config
-    try:
-        from email_2fa import set_sender_email
-        if config.email.sender:
-            set_sender_email(config.email.sender)
-    except Exception:
-        pass
     app = create_app()
     logger.info("Companion daemon starting on %s:%d", HOST, PORT)
     web.run_app(app, host=HOST, port=PORT, print=logger.info)

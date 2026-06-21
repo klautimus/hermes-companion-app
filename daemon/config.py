@@ -30,9 +30,6 @@ DEFAULT_CONFIG: dict[str, Any] = {
         "dir": "~/.hermes/companion/attachments",
         "max_upload_mb": 25,
     },
-    "email": {
-        "sender": "",  # Override sender email for OTP. If empty, uses the Gmail account's own address.
-    },
 }
 
 # Config file search paths (first found wins, before env override)

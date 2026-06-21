@@ -895,6 +895,10 @@ private fun TaskDetailSheet(
     var showAssignDropdown by remember { mutableStateOf(false) }
     var showAddDependencyDialog by remember { mutableStateOf(false) }
     var dependencyTaskId by remember { mutableStateOf("") }
+    var showDecomposeDialog by remember { mutableStateOf(false) }
+    var decomposeCount by remember { mutableStateOf(3) }
+    var showSpecifyDialog by remember { mutableStateOf(false) }
+    var specifyText by remember { mutableStateOf("") }
     val profiles by viewModel.profiles.collectAsState()
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -1158,6 +1162,8 @@ private fun TaskDetailSheet(
                     StatusChip("Complete", task.status != "done") { viewModel.updateTaskStatus(task.id, "done"); onDismiss() }
                     StatusChip("Archive", task.status != "archived") { viewModel.updateTaskStatus(task.id, "archived"); onDismiss() }
                     StatusChip("Delete", true, isDestructive = true) { showDeleteConfirm = true }
+                    StatusChip("Decompose", true) { showDecomposeDialog = true }
+                    StatusChip("Specify", true) { showSpecifyDialog = true }
                 }
             }
 
@@ -1447,6 +1453,67 @@ private fun TaskDetailSheet(
             // Bottom spacer
             item { Spacer(modifier = Modifier.height(32.dp)) }
         }
+    }
+
+    // ── Decompose Dialog ─────────────────────────────────────
+    if (showDecomposeDialog) {
+        AlertDialog(
+            onDismissRequest = { showDecomposeDialog = false },
+            title = { Text("Decompose Task") },
+            text = {
+                Column {
+                    Text("Split this task into subtasks", style = MaterialTheme.typography.bodyMedium)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("Number of subtasks: $decomposeCount", style = MaterialTheme.typography.labelMedium)
+                    Slider(
+                        value = decomposeCount.toFloat(),
+                        onValueChange = { decomposeCount = it.toInt() },
+                        valueRange = 2f..10f,
+                        steps = 7,
+                    )
+                }
+            },
+            confirmButton = {
+                Button(onClick = {
+                    viewModel.decomposeTask(task.id)
+                    showDecomposeDialog = false
+                }) { Text("Decompose") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDecomposeDialog = false }) { Text("Cancel") }
+            },
+        )
+    }
+
+    // ── Specify Dialog ───────────────────────────────────────
+    if (showSpecifyDialog) {
+        AlertDialog(
+            onDismissRequest = { showSpecifyDialog = false; specifyText = "" },
+            title = { Text("Add Specification") },
+            text = {
+                OutlinedTextField(
+                    value = specifyText,
+                    onValueChange = { specifyText = it },
+                    label = { Text("Specification") },
+                    placeholder = { Text("Enter task specification...") },
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 120.dp),
+                    maxLines = 10,
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        viewModel.specifyTask(task.id, specifyText)
+                        showSpecifyDialog = false
+                        specifyText = ""
+                    },
+                    enabled = specifyText.isNotBlank(),
+                ) { Text("Save") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showSpecifyDialog = false; specifyText = "" }) { Text("Cancel") }
+            },
+        )
     }
 
     // ── Block Dialog ──────────────────────────────────────────

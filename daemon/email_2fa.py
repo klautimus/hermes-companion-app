@@ -15,25 +15,18 @@ import time
 from email.mime.text import MIMEText
 from pathlib import Path
 
+# ── Challenge Store ─────────────────────────────────────────────
+# In-memory store: challenge_id -> {code, email, expires}
+_pending_challenges: dict[str, dict] = {}
+
 # Default token file path (can be overridden in tests)
 TOKEN_FILE = Path(os.path.expanduser("~/.hermes/google_token.json"))
 
+# Default sender email
+SENDER_EMAIL = "kevin.douglas.disher@gmail.com"
+
 # Challenge TTL in seconds
 CHALLENGE_TTL = 300  # 5 minutes
-
-# Sender email override — set via config.email.sender. If empty, uses the Gmail account's own address.
-_SENDER_EMAIL_OVERRIDE = ""
-
-
-def set_sender_email(email: str) -> None:
-    """Set the sender email override (called by server.py from config)."""
-    global _SENDER_EMAIL_OVERRIDE
-    _SENDER_EMAIL_OVERRIDE = email
-
-
-def _get_sender_email() -> str:
-    """Return the sender email: override if set, otherwise the Gmail account's own address."""
-    return _SENDER_EMAIL_OVERRIDE
 
 
 def generate_challenge(email: str) -> str:
@@ -100,7 +93,7 @@ def _build_message(to_email: str, code: str) -> dict:
 
     msg = MIMEText(body)
     msg["to"] = to_email
-    msg["from"] = _get_sender_email() or to_email  # fallback to recipient if no override set
+    msg["from"] = SENDER_EMAIL
     msg["subject"] = subject
 
     raw = base64.urlsafe_b64encode(msg.as_string().encode()).decode()

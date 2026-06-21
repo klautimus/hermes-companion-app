@@ -28,7 +28,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
 import io.noties.markwon.Markwon
-import java.util.Collections
 
 /**
  * Build a Markwon instance with all desired extensions.
@@ -36,12 +35,26 @@ import java.util.Collections
 @Composable
 fun rememberMarkdownRenderer(context: Context): Markwon {
     return remember {
-        val prism4j = io.noties.prism4j.Prism4j(
-            object : io.noties.prism4j.GrammarLocator {
-                override fun grammar(prism4j: io.noties.prism4j.Prism4j, language: String) = null
-                override fun languages(): Set<String> = Collections.emptySet()
+        val prism4j = io.noties.prism4j.Prism4j(object : io.noties.prism4j.GrammarLocator {
+            override fun grammar(prism4j: io.noties.prism4j.Prism4j, language: String): io.noties.prism4j.Prism4j.Grammar? {
+                return when (language) {
+                    "kotlin" -> grammarForKotlin(prism4j)
+                    "java" -> grammarForJava(prism4j)
+                    "python" -> grammarForPython(prism4j)
+                    "json" -> grammarForJson(prism4j)
+                    "bash", "shell", "sh" -> grammarForBash(prism4j)
+                    "yaml" -> grammarForYaml(prism4j)
+                    "javascript", "js" -> grammarForJavascript(prism4j)
+                    "go" -> grammarForGo(prism4j)
+                    "markdown", "md" -> grammarForMarkdown(prism4j)
+                    else -> null
+                }
             }
-        )
+            override fun languages(): Set<String> = setOf(
+                "kotlin", "java", "python", "json", "bash", "yaml",
+                "javascript", "go", "markdown"
+            )
+        })
         Markwon.builder(context)
             .usePlugin(io.noties.markwon.ext.strikethrough.StrikethroughPlugin.create())
             .usePlugin(io.noties.markwon.ext.tables.TablePlugin.create(context))
@@ -50,6 +63,14 @@ fun rememberMarkdownRenderer(context: Context): Markwon {
             .usePlugin(io.noties.markwon.syntax.SyntaxHighlightPlugin.create(prism4j, io.noties.markwon.syntax.Prism4jThemeDarkula.create()))
             .build()
     }
+}
+
+/**
+ * Expand emoji shortcodes in markdown text before Markwon processes it.
+ * This runs as a pre-processing step in MarkdownText composable.
+ */
+private fun expandEmojiShortcodes(markdown: String): String {
+    return EmojiShortcodeExpander.expand(markdown)
 }
 
 /**
@@ -154,7 +175,8 @@ fun MarkdownText(
     val markwon = rememberMarkdownRenderer(context)
 
     val annotatedString = remember(markdown) {
-        val spanned = markwon.toMarkdown(markdown)
+        val expanded = expandEmojiShortcodes(markdown)
+        val spanned = markwon.toMarkdown(expanded)
         spannedToAnnotatedString(spanned)
     }
 
